@@ -1,0 +1,10 @@
+.App {
+  margin: 15px;
+  display: grid;
+  /* grid-template-columns: 200px 200px; */
+  grid-template-rows: auto;
+  grid-template-areas:
+    '. header header .'
+    'mainleft mainleft mainright mainright'
+    'footer footer footer footer';
+}
