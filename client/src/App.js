@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Grid, Header, Button, List, Container } from 'semantic-ui-react';
-let phonebook = require('../src/phonebook');
+import { SemanticToastContainer, toast } from 'react-semantic-toasts';
+import 'react-semantic-toasts/styles/react-semantic-alert.css';
+import phonebook from '../src/phonebook';
+
 //
 class App extends Component {
   state = {
@@ -38,7 +41,7 @@ class App extends Component {
     this.setState({ newFact: facts[item - 1].fact, page, item });
   };
 
-  handleSend = (e) => {
+  handleSend = async (e) => {
     e.preventDefault();
     const data = {
       fact: this.state.newFact,
@@ -47,16 +50,28 @@ class App extends Component {
     fetch('http://localhost:5000/api/send', {
       method: 'POST',
       headers: {
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data);
-      });
+        setTimeout(() => {
+          toast({
+            type: 'success',
+            icon: 'phone',
+            title: 'Success!',
+            description: 'You have successfully sent a fact!',
+            animation: 'bounce',
+            time: 2000,
+          });
+          this.handleSubmit(e);
+        }, 500);
+      })
+      .catch((err) => console.log(err));
 
-    this.handleSubmit(e);
+    //this.handleSubmit(e);
   };
 
   setContact = (e) => {
@@ -65,7 +80,6 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <div className="App">
         <Container>
@@ -141,6 +155,9 @@ class App extends Component {
                     SEND!
                   </Button>
                 </form>
+              </Grid.Column>
+              <Grid.Column>
+                <SemanticToastContainer position="top-right" />
               </Grid.Column>
             </Grid.Row>
           </Grid>
