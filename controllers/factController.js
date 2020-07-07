@@ -8,14 +8,15 @@ module.exports = {
     let factData = [];
     factQueries.getTheCount((err, count) => {
       if (err) throw err;
-      console.log(count);
       res.send(count);
     });
   },
   send(req, res, next) {
     const { phone, fact } = req.body;
-    console.log(phone, fact);
-    sendSms(phone, fact);
+    sendSms(phone, fact, (err, msg) => {
+      if (err) throw err;
+      res.send(msg);
+    });
   },
   reply(req, res, next) {
     const twiml = new MessagingResponse();
