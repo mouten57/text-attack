@@ -5,7 +5,6 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 module.exports = {
   get(req, res, next) {
-    let factData = [];
     factQueries.getTheCount((err, count) => {
       if (err) throw err;
       res.send(count);

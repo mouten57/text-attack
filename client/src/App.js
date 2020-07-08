@@ -19,11 +19,11 @@ class App extends Component {
     const response = await fetch('http://localhost:5000/api/fact', {
       method: 'GET',
     });
-    const body = await response.json();
-    let facts = await body.facts.list;
-    let latestCount = await body.latestCount;
-    let page = latestCount.page;
-    let item = latestCount.item;
+    const all_facts = await response.json();
+    let facts = await all_facts.facts.list;
+    let currentCount = await all_facts.latestCount;
+    let page = currentCount.page;
+    let item = currentCount.item;
     this.setState({ newFact: facts[item - 1].fact, page, item });
   }
 
