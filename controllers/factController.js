@@ -15,23 +15,34 @@ module.exports = {
     const { phone, fact } = req.body;
     sendSms(phone, fact, (err, msg) => {
       if (err) throw err;
-      res.send(msg);
+      factQueries.send(msg, (err, send) => {
+        if (err) throw err;
+        res.send(msg);
+      });
     });
   },
   reply(req, res, next) {
     const twiml = new MessagingResponse();
     const body = req.body.Body.toLowerCase();
-    if (body == 'hello') {
-      twiml.message('Hi!');
-    } else if (body == 'help') {
-      twiml.message('THERE IS NO HELP.');
-    } else if (body == 'bye') {
-      twiml.message('Goodbye');
-    } else {
-      twiml.message('Reply "HELP" to see all available options');
-    }
-
-    res.writeHead(200, { 'Content-Type': 'text/xml' });
-    res.end(twiml.toString());
+    console.log(req.body);
+    factQueries.reply(req.body, (err, reply) => {
+      try {
+        if (body == 'hello') {
+          twiml.message('Hi!');
+        } else if (body == 'stop') {
+          twiml.message('LOL.');
+        } else if (body == 'help') {
+          twiml.message('THERE IS NO HELP.');
+        } else if (body == 'bye') {
+          twiml.message('Goodbye');
+        } else {
+          twiml.message('Reply "HELP" to see all available options');
+        }
+        res.writeHead(200, { 'Content-Type': 'text/xml' });
+        res.end(twiml.toString());
+      } catch (err) {
+        throw err;
+      }
+    });
   },
 };

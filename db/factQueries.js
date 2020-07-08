@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const Fact = mongoose.model('facts');
+const Send = mongoose.model('send');
+const Reply = mongoose.model('reply');
 const axios = require('axios');
 const Count = mongoose.model('count');
 const convertTimeStamp = require('../helpers/convertTimestamp');
+const phonebook = require('../client/src/phonebook');
 // const url = `https://chucknorrisfacts.net/facts.php?page=${count.page}`;
 const cheerio = require('cheerio');
 
@@ -18,6 +21,9 @@ const getData = (html) => {
   });
   // factData.push(count);
   return factData;
+};
+const getNameFromNumber = (value) => {
+  return Object.keys(phonebook).find((key) => phonebook[key] == value);
 };
 
 module.exports = {
@@ -119,5 +125,39 @@ module.exports = {
           }
         }
       });
+  },
+  async send(msg, callback) {
+    const { body, from, to, dateCreated } = msg;
+    const send = new Send({
+      body,
+      from,
+      fromName: getNameFromNumber(from),
+      to,
+      toName: getNameFromNumber(to),
+      dateCreated,
+    });
+    try {
+      send.save();
+      callback(null, msg);
+    } catch (err) {
+      throw err;
+    }
+  },
+  async reply(msg, callback) {
+    const { Body, From, To } = msg;
+    const reply = new Reply({
+      Body,
+      From,
+      fromName: getNameFromNumber(From),
+      To,
+      toName: getNameFromNumber(To),
+      dateCreated: Date.now(),
+    });
+    try {
+      reply.save();
+      callback(null, msg);
+    } catch (err) {
+      throw err;
+    }
   },
 };
