@@ -4,7 +4,7 @@ const Send = mongoose.model('send');
 const Reply = mongoose.model('reply');
 const axios = require('axios');
 const Count = mongoose.model('count');
-const convertTimeStamp = require('../helpers/convertTimestamp');
+const getNameFromNumber = require('../helpers/getNameFromNumber');
 const phonebook = require('../client/src/phonebook');
 // const url = `https://chucknorrisfacts.net/facts.php?page=${count.page}`;
 const cheerio = require('cheerio');
@@ -21,9 +21,6 @@ const getData = (html) => {
   });
   // factData.push(count);
   return factData;
-};
-const getNameFromNumber = (value) => {
-  return Object.keys(phonebook).find((key) => phonebook[key] == value);
 };
 
 module.exports = {

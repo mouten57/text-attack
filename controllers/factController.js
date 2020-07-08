@@ -2,6 +2,8 @@ const config = require('../config/keys/keys');
 const sendSms = require('../helpers/twilio');
 const factQueries = require('../db/factQueries.js');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
+const phonebook = require('../client/src/phonebook')
+const getNameFromNumber = require('../helpers/getNameFromNumber')
 
 module.exports = {
   get(req, res, next) {
@@ -13,11 +15,16 @@ module.exports = {
   send(req, res, next) {
     const { phone, fact } = req.body;
     sendSms(phone, fact, (err, msg) => {
-      if (err) throw err;
+      if (err){console.log(err)
+      }else{
       factQueries.send(msg, (err, send) => {
-        if (err) throw err;
+        if (err){
+          console.log(err);
+        }else{
         res.send(msg);
-      });
+        }    
+      });  
+    }  
     });
   },
   reply(req, res, next) {
@@ -26,21 +33,17 @@ module.exports = {
     console.log(req.body);
     factQueries.reply(req.body, (err, reply) => {
       try {
-        if (body == 'hello') {
-          twiml.message('Hi!');
-        } else if (body == 'stop') {
-          twiml.message('LOL.');
-        } else if (body == 'help') {
-          twiml.message('THERE IS NO HELP.');
-        } else if (body == 'bye') {
-          twiml.message('Goodbye');
-        } else {
-          twiml.message('Reply "HELP" to see all available options');
+        switch (body){
+          case "hello": twiml.message('Hi!');
+          case 'stop': twiml.message('LOL.');
+          case 'help': twiml.message('THERE IS NO HELP.');
+          case 'bye': twiml.message('Goodbye');
+          default: twiml.message('Reply "HELP" to see all available options');
         }
         res.writeHead(200, { 'Content-Type': 'text/xml' });
         res.end(twiml.toString());
       } catch (err) {
-        throw err;
+        console.log(err)
       }
     });
   },
