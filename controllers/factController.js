@@ -14,7 +14,7 @@ module.exports = {
       res.send(count);
     });
   },
-  send(req, res, next) {
+  send(req, res, next) { 
     const { phone, fact } = req.body;
     const global_message = {
       body: fact,
@@ -34,7 +34,7 @@ module.exports = {
                     console.log(err.message)
                     if (err.message.includes('blacklist rule')) {
                       const email_to_send = {
-                        to: 'outenmp@gmail.com',
+                        to: 'awalker@solutionzinc.com',
                         from: 'ckn0rr1ss@gmail.com',
                         subject: 'Chuck Norris Fact',
                         text: fact,
@@ -100,12 +100,18 @@ module.exports = {
     const body = req.body.Body.toLowerCase();
     factQueries.reply(req.body, (err, reply) => {
       try {
+        let reply;
         switch (body){
-          case "hello": twiml.message('Hi!'); break;
-          case 'stop': twiml.message('LOL.'); break;
-          case 'bye': twiml.message('Goodbye'); break;
-          default: twiml.message('Reply "HELP" to see all available options');
+          case "hello": 
+          reply = "Hi!"
+          break;
+          case 'bye': 
+          reply = "Goodbye!"
+          break;
+          default: 
+          reply = 'Reply "HELP" to see all available options'
         }
+        twiml.message(reply)
         res.writeHead(200, { 'Content-Type': 'text/xml' });
         res.end(twiml.toString());
       } catch (err) {
