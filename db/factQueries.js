@@ -31,18 +31,41 @@ module.exports = {
       .then(async (latestCount) => {
         //if this is the first count EVER..should only happen once
         if (latestCount == null) {
-          const firstCounter = new Count({
+          console.log('count is NULL!')
+          const latestCount = new Count({
             page: 1,
             item: 1,
             created_at: Date.now(),
           });
-
-          try {
-            firstCounter.save();
-            callback(null, (firstCounter = 1));
-          } catch (err) {
-            callback(err);
+          let facts = await Fact.findOne({ page: 1 });
+          if (facts != null) {
+            latestCount.save();
+            var count_and_facts = { latestCount, facts };
+            callback(null, count_and_facts);
+          } else {
+            const url = `https://chucknorrisfacts.net/facts.php?page=${latestCount.page}`;
+            axios
+              .get(url)
+              .then((response) => {
+                const facts = new Fact({
+                  page: latestCount.page,
+                  created_at: Date.now(),
+                  list: getData(response),
+                });
+                try {
+                  facts.save();
+                  latestCount.save();
+                  var count_and_facts = { latestCount, facts };
+                  callback(null, count_and_facts);
+                } catch (err) {
+                  callback(err);
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
+
         } else {
           if (latestCount.item == 20) {
             //need to signal new call is to be made on controller, will also need to save next 20 facts

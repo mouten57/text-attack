@@ -20,6 +20,7 @@ class App extends Component {
       method: 'GET',
     });
     const all_facts = await response.json();
+    console.log(all_facts)
     let facts = await all_facts.facts.list;
     let currentCount = await all_facts.latestCount;
     let page = currentCount.page;
