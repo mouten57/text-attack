@@ -12,7 +12,7 @@ class App extends Component {
     item: 1,
     post: '',
     newFact: '',
-    contact: { name: 'Alex', phone: '+17043431124' },
+    contact: { name: 'Matt', phone: phonebook['Matt'].number },
   };
 
   async componentDidMount() {
@@ -79,10 +79,20 @@ class App extends Component {
     this.setState({ contact: { name, phone: phonebook[name].number } });
   };
 
+  handleReset = async (e)=> {
+    e.preventDefault();
+    const response = await fetch('http://localhost:5000/api/reset', {
+      method: 'GET',
+    })
+    const body = await response.json()
+    this.setState({page: 1, item: 1, newFact: body.facts.list[0].fact })
+  }
+
   render() {
     return (
       <div className="App">
         <Container>
+        <SemanticToastContainer position="top-right" />
           <Grid divided centered>
             <Header as="h2" icon textAlign="center">
               <Header.Content>CHUCK NORRIS JOKE CENTRAL</Header.Content>
@@ -148,7 +158,7 @@ class App extends Component {
                 </p>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={1}>
+            <Grid.Row columns={2}>
               <Grid.Column>
                 <form onSubmit={this.handleSend}>
                   <Button fluid type="submit" color={'green'}>
@@ -157,7 +167,11 @@ class App extends Component {
                 </form>
               </Grid.Column>
               <Grid.Column>
-                <SemanticToastContainer position="top-right" />
+              <form onSubmit={this.handleReset}>
+              <Button fluid  type="submit" color={'blue'}>
+                    RESET COUNTER
+                  </Button>
+                </form>
               </Grid.Column>
             </Grid.Row>
           </Grid>

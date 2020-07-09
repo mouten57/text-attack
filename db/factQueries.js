@@ -123,6 +123,21 @@ module.exports = {
         }
       });
   },
+  async resetTheCount(callback){
+      let count = await Count.findOne().sort({ field: 'asc', _id: -1 }).limit(1)
+      count.page = 1
+      count.item = 1
+      count.save()
+      let facts = await Fact.findOne({ page: count.page });
+      let count_and_facts = {count, facts}
+      try {
+        callback(null, count_and_facts)
+      } catch (err){
+        console.log(err)
+      }
+
+        
+  },
   async send(msg, callback) {
     const { body, from, to, dateCreated, type } = msg;
     const send = new Send({

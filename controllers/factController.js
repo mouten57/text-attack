@@ -114,4 +114,10 @@ module.exports = {
       }
     });
   },
+  reset(req, res, next) {
+    factQueries.resetTheCount((err, count) => {
+      if (err) throw err;
+      res.send(count);
+    });
+  },
 };
