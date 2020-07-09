@@ -76,7 +76,7 @@ class App extends Component {
 
   setContact = (e) => {
     let name = e.currentTarget.textContent;
-    this.setState({ contact: { name, phone: phonebook[name] } });
+    this.setState({ contact: { name, phone: phonebook[name].number } });
   };
 
   render() {

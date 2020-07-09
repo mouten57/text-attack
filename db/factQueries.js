@@ -124,7 +124,7 @@ module.exports = {
       });
   },
   async send(msg, callback) {
-    const { body, from, to, dateCreated } = msg;
+    const { body, from, to, dateCreated, type } = msg;
     const send = new Send({
       body,
       from,
@@ -132,6 +132,7 @@ module.exports = {
       to,
       toName: getNameFromNumber(to),
       dateCreated,
+      type
     });
     try {
       send.save();

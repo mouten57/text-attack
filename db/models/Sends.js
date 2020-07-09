@@ -8,6 +8,7 @@ const sendSchema = new Schema({
   to: String,
   toName: String,
   dateCreated: Date,
+  type: String
 });
 
 mongoose.model('send', sendSchema);
