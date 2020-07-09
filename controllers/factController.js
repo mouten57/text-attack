@@ -101,10 +101,9 @@ module.exports = {
     factQueries.reply(req.body, (err, reply) => {
       try {
         switch (body){
-          case "hello": twiml.message('Hi!');
-          case 'stop': twiml.message('LOL.');
-          case 'help': twiml.message('THERE IS NO HELP.');
-          case 'bye': twiml.message('Goodbye');
+          case "hello": twiml.message('Hi!'); break;
+          case 'stop': twiml.message('LOL.'); break;
+          case 'bye': twiml.message('Goodbye'); break;
           default: twiml.message('Reply "HELP" to see all available options');
         }
         res.writeHead(200, { 'Content-Type': 'text/xml' });
