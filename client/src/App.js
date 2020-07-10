@@ -48,6 +48,7 @@ class App extends Component {
       fact: this.state.newFact,
       phone: this.state.contact.phone,
     };
+    console.log(data)
     fetch('/api/send', {
       method: 'POST',
       headers: {
@@ -77,6 +78,7 @@ class App extends Component {
 
   setContact = (e) => {
     let name = e.currentTarget.textContent;
+    console.log(phonebook[e.currentTarget.textContent])
     this.setState({ contact: { name, phone: phonebook[name].number } });
   };
 
