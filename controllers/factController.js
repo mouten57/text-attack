@@ -3,7 +3,6 @@ const sendSms = require('../helpers/twilio');
 const factQueries = require('../db/factQueries.js');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const phonebook = require('../client/src/phonebook')
-const getNameFromNumber = require('../helpers/getNameFromNumber')
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(keys.SENDGRID_API_KEY);
 
@@ -109,7 +108,7 @@ module.exports = {
           reply = "Goodbye!"
           break;
           default: 
-          reply = 'Reply "HELP" to see all available options'
+          reply = 'LOL'
         }
         twiml.message(reply)
         res.writeHead(200, { 'Content-Type': 'text/xml' });

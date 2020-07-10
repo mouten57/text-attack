@@ -5,5 +5,8 @@ module.exports = {
   Matt: {number: '+17043431124', email: 'ckn0rr1ss@gmail.com'},
   Alex: {number: '+17045890190‬', email: 'awalker@solutionzinc.com'},
   Emily: {number:'+19196495660', email: 'emilygdispirito@gmail.com'},
-  Eddie: { number:'‭+16073391244‬', email: 'edward61@hotmail.com'}
+  Eddie: { number:'‭+16073391244‬', email: 'edward61@hotmail.com'},
+  Mom: { number: '+16073270061‬', email: 'lmcowen64@aol.com'},
+  Cait: {number: '+18327730470'},
+  Bailey: {number: '‭+16073391078‬'}
 };

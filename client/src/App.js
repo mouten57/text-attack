@@ -134,6 +134,24 @@ class App extends Component {
                       <p onClick={this.setContact}>Eddie</p>
                     </List.Content>
                   </List.Item>
+                  <List.Item>
+                    <List.Icon name="phone" />
+                    <List.Content>
+                      <p onClick={this.setContact}>Mom</p>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="phone" />
+                    <List.Content>
+                      <p onClick={this.setContact}>Cait</p>
+                    </List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="phone" />
+                    <List.Content>
+                      <p onClick={this.setContact}>Bailey</p>
+                    </List.Content>
+                  </List.Item>
                 </List>
               </Grid.Column>
             </Grid.Row>
