@@ -55,7 +55,7 @@ module.exports = {
                     }
                   } else {
                     global_message.type = 'Text';
-                    factQueries.send(msg, (err, send) => {
+                    factQueries.send(global_message, (err, send) => {
                       if (err){
                         console.log(err);
       
@@ -68,7 +68,7 @@ module.exports = {
               }
             } else {
               global_message.type = 'Text';
-              factQueries.send(msg, (err, send) => {
+              factQueries.send(global_message, (err, send) => {
                 if (err){
                   console.log(err);
 
@@ -84,7 +84,7 @@ module.exports = {
         }
       }else{
         global_message.type = 'Text'
-      factQueries.send(msg, (err, send) => {
+      factQueries.send(global_message, (err, send) => {
         if (err){
           console.log(err);
         }else{
