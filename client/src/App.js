@@ -16,7 +16,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const response = await fetch('http://localhost:5000/api/fact', {
+    const response = await fetch('/api/fact', {
       method: 'GET',
     });
     const all_facts = await response.json();
@@ -30,7 +30,7 @@ class App extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:5000/api/fact', {
+    const response = await fetch('/api/fact', {
       method: 'GET',
     });
     const all_facts = await response.json();
@@ -48,7 +48,7 @@ class App extends Component {
       fact: this.state.newFact,
       phone: this.state.contact.phone,
     };
-    fetch('http://localhost:5000/api/send', {
+    fetch('/api/send', {
       method: 'POST',
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -82,7 +82,7 @@ class App extends Component {
 
   handleReset = async (e)=> {
     e.preventDefault();
-    const response = await fetch('http://localhost:5000/api/reset', {
+    const response = await fetch('/api/reset', {
       method: 'GET',
     })
     const body = await response.json()
