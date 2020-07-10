@@ -163,6 +163,7 @@ module.exports = {
   },
   async send(msg, callback) {
     const { body, from, to, dateCreated, type } = msg;
+    // console.log(getNameFromNumber(to), to)
     const send = new Send({
       body,
       from,

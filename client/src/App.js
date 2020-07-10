@@ -110,48 +110,16 @@ class App extends Component {
                   <Header as="h5" icon textAlign="center">
                     <Header.Content>Contact List</Header.Content>
                   </Header>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Alex</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Matt</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Emily</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Eddie</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Mom</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Cait</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="phone" />
-                    <List.Content>
-                      <p onClick={this.setContact}>Bailey</p>
-                    </List.Content>
-                  </List.Item>
+                {Object.keys(phonebook).map((name, i) => {
+                  return(
+                  <List.Item key={i}>
+                  <List.Icon name="phone" />
+                  <List.Content>
+                    <p onClick={this.setContact}>{name}</p>
+                  </List.Content>
+                </List.Item>
+                  )
+                })}
                 </List>
               </Grid.Column>
             </Grid.Row>

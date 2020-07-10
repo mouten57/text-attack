@@ -3,10 +3,13 @@ module.exports = {
   Twilio2: {number:'+17043273254'},
   Twilio3: {number:'+17043273171'},
   Matt: {number: '+17043431124', email: 'ckn0rr1ss@gmail.com'},
-  Alex: {number: '+17045890190‬', email: 'awalker@solutionzinc.com'},
+  Alex: {number: '+17045890190', email: 'awalker@solutionzinc.com'},
+  Hansen: {number:'+16073395321'},
   Emily: {number:'+19196495660', email: 'emilygdispirito@gmail.com'},
-  Eddie: { number:'‭+16073391244‬', email: 'edward61@hotmail.com'},
-  Mom: { number: '+16073270061‬', email: 'lmcowen64@aol.com'},
+  Eddie: { number:'+16073391244', email: 'edward61@hotmail.com'},
+  Mom: { number: '+16073270061', email: 'lmcowen64@aol.com'},
+  Dan: {number: '+7138352958'},
+  Dad: {number: '+17044415717'},
   Cait: {number: '+18327730470'},
-  Bailey: {number: '‭+16073391078‬'}
+  Bailey: {number: '+16073391078'}
 };
