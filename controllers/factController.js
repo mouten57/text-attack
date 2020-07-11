@@ -97,26 +97,38 @@ module.exports = {
   reply(req, res, next) {
     const twiml = new MessagingResponse();
     const body = req.body.Body.toLowerCase();
-    factQueries.reply(req.body, (err, reply) => {
-      try {
-        let reply;
-        switch (body){
-          case "hello": 
-          reply = "Hi!"
-          break;
-          case 'bye': 
-          reply = "Goodbye!"
-          break;
-          default: 
-          reply = 'LOL'
-        }
-        twiml.message(reply)
-        res.writeHead(200, { 'Content-Type': 'text/xml' });
-        res.end(twiml.toString());
-      } catch (err) {
-        console.log(err)
-      }
-    });
+    const email_to_send = {
+      to: 'outenmp@gmail.com',
+      from: 'ckn0rr1ss@gmail.com',
+      subject: 'A NEW REPLY!!',
+      text: fact,
+      html: `<strong>${body} from ${req.body.From}</strong>`,
+    };
+      sgMail.send(email_to_send).then(() => {
+        factQueries.reply(req.body, (err, reply) => {
+          try {
+            let reply;
+            switch (body){
+              case "hello": 
+              reply = "Hi!"
+              break;
+              case 'bye': 
+              reply = "Goodbye!"
+              break;
+              default: 
+              reply = 'LOL'
+            }
+            twiml.message(reply)
+            res.writeHead(200, { 'Content-Type': 'text/xml' });
+            res.end(twiml.toString());
+          } catch (err) {
+            console.log(err)
+          }
+        });  
+    }).catch((error) => {
+        console.log(error.response.body)
+    })
+
   },
   reset(req, res, next) {
     factQueries.resetTheCount((err, count) => {
