@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Grid, Header, Button, List, Container } from 'semantic-ui-react';
+import {
+  Grid,
+  Header,
+  Button,
+  List,
+  Container,
+  TextArea,
+  Form,
+} from 'semantic-ui-react';
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 import 'react-semantic-toasts/styles/react-semantic-alert.css';
 import phonebook from '../src/phonebook';
@@ -13,6 +21,9 @@ class App extends Component {
     post: '',
     newFact: '',
     contact: { name: 'Matt', phone: phonebook['Matt'].number },
+    customMessageBool: false,
+    customMessageValue: '',
+    customButtonColor: 'yellow',
   };
 
   async componentDidMount() {
@@ -44,8 +55,11 @@ class App extends Component {
 
   handleSend = async (e) => {
     e.preventDefault();
+    let val_to_send = this.state.customMessageBool
+      ? this.state.customMessageValue
+      : this.state.newFact;
     const data = {
-      fact: this.state.newFact,
+      fact: val_to_send,
       phone: this.state.contact.phone,
     };
     console.log(data);
@@ -58,7 +72,7 @@ class App extends Component {
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(() => {
         setTimeout(() => {
           toast({
             type: 'success',
@@ -68,7 +82,8 @@ class App extends Component {
             animation: 'bounce',
             time: 2000,
           });
-          this.handleSubmit(e);
+          //Remove auto-generate new fact
+          // this.handleSubmit(e);
         }, 500);
       })
       .catch((err) => console.log(err));
@@ -90,16 +105,26 @@ class App extends Component {
     const body = await response.json();
     this.setState({ page: 1, item: 1, newFact: body.facts.list[0].fact });
   };
+  initCustomMessage = (e) => {
+    let customButtonColor =
+      this.state.customButtonColor == 'yellow' ? 'orange' : 'yellow';
+    this.setState({
+      customMessageBool: !this.state.customMessageBool,
+      customButtonColor,
+    });
+  };
+
+  handleCustomMessageInput = (e) => {
+    let customMessageValue = e.target.value;
+    this.setState({ customMessageValue });
+  };
 
   render() {
-    console.log(
-      Object.keys(phonebook).filter((name) => !name.includes('Twilio'))
-    );
     return (
       <div className="App">
         <Container>
           <SemanticToastContainer position="top-right" />
-          <Grid divided centered>
+          <Grid divided>
             <Header as="h2" icon textAlign="center">
               <Header.Content>CHUCK NORRIS JOKE CENTRAL</Header.Content>
             </Header>
@@ -130,20 +155,60 @@ class App extends Component {
                 </List>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                <form onSubmit={this.handleSubmit}>
-                  <Button type="submit">New Fact</Button>
-                </form>
+            <Grid.Row>
+              <Grid.Column width={3}>
+                <Form onSubmit={this.handleSubmit} floated={'left'}>
+                  <Button type="submit" floated={'left'} fluid>
+                    New Fact
+                  </Button>
+                </Form>
+              </Grid.Column>
+              <Grid.Column width={3}>
+                <Form onSubmit={this.handleReset}>
+                  <Button type="submit" color={'blue'} fluid>
+                    Reset
+                  </Button>
+                </Form>
+              </Grid.Column>
+              <Grid.Column width={3}>
+                <Button
+                  type="submit"
+                  color={this.state.customButtonColor}
+                  fluid
+                  onClick={this.initCustomMessage}
+                >
+                  Custom Message
+                </Button>
               </Grid.Column>
             </Grid.Row>
+            {this.state.customMessageBool ? (
+              <Grid.Row columns={1}>
+                <Grid.Column>
+                  <Form>
+                    <TextArea
+                      placeholder="Enter custom message"
+                      onInput={this.handleCustomMessageInput}
+                      value={this.state.customMessageValue}
+                    />
+                  </Form>
+                </Grid.Column>
+              </Grid.Row>
+            ) : (
+              <div></div>
+            )}
             <Grid.Row columns={1}>
               <Grid.Column>
                 <div>RECAP:</div>
                 <p>
                   Sending{' '}
                   <i>
-                    "<u>{this.state.newFact}</u>"
+                    "
+                    <u>
+                      {this.state.customMessageBool
+                        ? this.state.customMessageValue
+                        : this.state.newFact}
+                    </u>
+                    "
                   </i>{' '}
                   to{' '}
                   <i>
@@ -152,18 +217,11 @@ class App extends Component {
                 </p>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={2}>
-              <Grid.Column>
+            <Grid.Row centered>
+              <Grid.Column width={12}>
                 <form onSubmit={this.handleSend}>
                   <Button fluid type="submit" color={'green'}>
                     SEND!
-                  </Button>
-                </form>
-              </Grid.Column>
-              <Grid.Column>
-                <form onSubmit={this.handleReset}>
-                  <Button fluid type="submit" color={'blue'}>
-                    RESET COUNTER
                   </Button>
                 </form>
               </Grid.Column>
