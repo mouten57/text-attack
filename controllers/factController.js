@@ -101,7 +101,7 @@ module.exports = {
       to: 'outenmp@gmail.com',
       from: 'ckn0rr1ss@gmail.com',
       subject: 'A NEW REPLY!!',
-      text: fact,
+      text: body,
       html: `<strong>${body} from ${req.body.From}</strong>`,
     };
       sgMail.send(email_to_send).then(() => {

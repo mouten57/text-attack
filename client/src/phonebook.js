@@ -18,5 +18,6 @@ module.exports = {
   Mitch_Martin: {number: '+17046954574'},
   Baby_Rachel: { number: '+17049992224'},
   Andre: {number: '+19102061167'},
-  BrotherLove: {number: '+19802989815'}
+  BrotherLove: {number: '+19802989815'},
+  Rick_Nance: {number: '+17042218505'}
 };
