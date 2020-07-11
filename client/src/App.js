@@ -20,7 +20,7 @@ class App extends Component {
       method: 'GET',
     });
     const all_facts = await response.json();
-    console.log(all_facts)
+    console.log(all_facts);
     let facts = await all_facts.facts.list;
     let currentCount = await all_facts.latestCount;
     let page = currentCount.page;
@@ -48,7 +48,7 @@ class App extends Component {
       fact: this.state.newFact,
       phone: this.state.contact.phone,
     };
-    console.log(data)
+    console.log(data);
     fetch('/api/send', {
       method: 'POST',
       headers: {
@@ -78,24 +78,27 @@ class App extends Component {
 
   setContact = (e) => {
     let name = e.currentTarget.textContent;
-    console.log(phonebook[e.currentTarget.textContent])
+    console.log(phonebook[e.currentTarget.textContent]);
     this.setState({ contact: { name, phone: phonebook[name].number } });
   };
 
-  handleReset = async (e)=> {
+  handleReset = async (e) => {
     e.preventDefault();
     const response = await fetch('/api/reset', {
       method: 'GET',
-    })
-    const body = await response.json()
-    this.setState({page: 1, item: 1, newFact: body.facts.list[0].fact })
-  }
+    });
+    const body = await response.json();
+    this.setState({ page: 1, item: 1, newFact: body.facts.list[0].fact });
+  };
 
   render() {
+    console.log(
+      Object.keys(phonebook).filter((name) => !name.includes('Twilio'))
+    );
     return (
       <div className="App">
         <Container>
-        <SemanticToastContainer position="top-right" />
+          <SemanticToastContainer position="top-right" />
           <Grid divided centered>
             <Header as="h2" icon textAlign="center">
               <Header.Content>CHUCK NORRIS JOKE CENTRAL</Header.Content>
@@ -112,16 +115,18 @@ class App extends Component {
                   <Header as="h5" icon textAlign="center">
                     <Header.Content>Contact List</Header.Content>
                   </Header>
-                {Object.keys(phonebook).map((name, i) => {
-                  return(
-                  <List.Item key={i}>
-                  <List.Icon name="phone" />
-                  <List.Content>
-                    <p onClick={this.setContact}>{name}</p>
-                  </List.Content>
-                </List.Item>
-                  )
-                })}
+                  {Object.keys(phonebook)
+                    .filter((name) => !name.includes('Twilio'))
+                    .map((name, i) => {
+                      return (
+                        <List.Item key={i}>
+                          <List.Icon name="phone" />
+                          <List.Content>
+                            <p onClick={this.setContact}>{name}</p>
+                          </List.Content>
+                        </List.Item>
+                      );
+                    })}
                 </List>
               </Grid.Column>
             </Grid.Row>
@@ -156,8 +161,8 @@ class App extends Component {
                 </form>
               </Grid.Column>
               <Grid.Column>
-              <form onSubmit={this.handleReset}>
-              <Button fluid  type="submit" color={'blue'}>
+                <form onSubmit={this.handleReset}>
+                  <Button fluid type="submit" color={'blue'}>
                     RESET COUNTER
                   </Button>
                 </form>
