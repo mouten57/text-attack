@@ -2,7 +2,7 @@ const keys = require('../config/keys/keys');
 const sendSms = require('../helpers/twilio');
 const factQueries = require('../db/factQueries.js');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const phonebook = require('../client/src/phonebook')
+const phonebook = require('../client/src/phonebook');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(keys.SENDGRID_API_KEY);
 
@@ -13,24 +13,24 @@ module.exports = {
       res.send(count);
     });
   },
-  send(req, res, next) { 
+  send(req, res, next) {
     const { phone, fact } = req.body;
     const global_message = {
       body: fact,
       from: keys.TWILIO_PHONE_NUMBER,
       to: phone,
       dateCreated: Date.now(),
-    }
-    sendSms(count=1, phone, fact, (err, msg) => {
-      if (err){
-        if (err.message.includes('blacklist rule')){
-          sendSms(count=2, phone, fact, (err, msg)=> {
-            if (err){
-              console.log(err.message)
-              if (err.message.includes('blacklist rule')){
-                sendSms(count=3, phone, fact, (err, msg)=> { 
-                  if (err){
-                    console.log(err.message)
+    };
+    sendSms((count = 1), phone, fact, (err, msg) => {
+      if (err) {
+        console.log(err.message);
+        if (err.message.includes('blacklist rule')) {
+          sendSms((count = 2), phone, fact, (err, msg) => {
+            if (err) {
+              if (err.message.includes('blacklist rule')) {
+                sendSms((count = 3), phone, fact, (err, msg) => {
+                  if (err) {
+                    console.log(err.message);
                     if (err.message.includes('blacklist rule')) {
                       const email_to_send = {
                         to: 'awalker@solutionzinc.com',
@@ -39,59 +39,62 @@ module.exports = {
                         text: fact,
                         html: `<strong>${fact}</strong>`,
                       };
-                        sgMail.send(email_to_send).then(() => {
-                          console.log('Message sent')
-                          global_message.type = 'Email'
-                          factQueries.send(global_message, (err, query_save) => {
-                            if (err){
-                              console.log(err);
-                            }else{
-                              res.send(query_save);
-                            }    
-                          });  
-                      }).catch((error) => {
-                          console.log(error.response.body)
-                      })
+                      sgMail
+                        .send(email_to_send)
+                        .then(() => {
+                          console.log('Message sent');
+                          global_message.type = 'Email';
+                          factQueries.send(
+                            global_message,
+                            (err, query_save) => {
+                              if (err) {
+                                console.log(err);
+                              } else {
+                                res.send(query_save);
+                              }
+                            }
+                          );
+                        })
+                        .catch((error) => {
+                          console.log(error.response.body);
+                        });
                     }
                   } else {
                     global_message.type = 'Text';
                     factQueries.send(global_message, (err, send) => {
-                      if (err){
+                      if (err) {
                         console.log(err);
-      
-                      }else{
+                      } else {
                         res.send(msg);
-                      }    
-                    }); 
+                      }
+                    });
                   }
-                })
+                });
               }
             } else {
               global_message.type = 'Text';
               factQueries.send(global_message, (err, send) => {
-                if (err){
+                if (err) {
                   console.log(err);
-
-                }else{
+                } else {
                   res.send(msg);
-                }    
-              }); 
+                }
+              });
             }
-          })
-
+          });
         } else {
-        console.log(err.message)
+          console.log(err.message);
         }
-      }else{
-        global_message.type = 'Text'
-      factQueries.send(global_message, (err, send) => {
-        if (err){
-          console.log(err);
-        }else{
-          res.send(msg);
-        }    
-      });  
-    }  
+      } else {
+        global_message.type = 'Text';
+        factQueries.send(global_message, (err, send) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send(msg);
+          }
+        });
+      }
     });
   },
   reply(req, res, next) {
@@ -104,31 +107,40 @@ module.exports = {
       text: body,
       html: `<strong>${body} from ${req.body.From}</strong>`,
     };
-      sgMail.send(email_to_send).then(() => {
+    sgMail
+      .send(email_to_send)
+      .then(() => {
         factQueries.reply(req.body, (err, reply) => {
           try {
-            let reply;
-            switch (body){
-              case "hello": 
-              reply = "Hi!"
-              break;
-              case 'bye': 
-              reply = "Goodbye!"
-              break;
-              default: 
-              reply = 'LOL'
+            let outgoing_to_user;
+            switch (reply.Body.toLowerCase()) {
+              case 'hello':
+                outgoing_to_user = 'Hi!';
+                break;
+              case 'help':
+                break;
+              case 'new fact':
+                outgoing_to_user =
+                  'We are currently working on this; Chuck Norris thanks you for your patience';
+                break;
+              case 'bye':
+                outgoing_to_user = 'Goodbye!';
+                break;
+              default:
+                outgoing_to_user = 'LOL. Text "HELP" to see more options.';
+                break;
             }
-            twiml.message(reply)
+            twiml.message(outgoing_to_user);
             res.writeHead(200, { 'Content-Type': 'text/xml' });
             res.end(twiml.toString());
           } catch (err) {
-            console.log(err)
+            console.log(err);
           }
-        });  
-    }).catch((error) => {
-        console.log(error.response.body)
-    })
-
+        });
+      })
+      .catch((error) => {
+        console.log(error.response.body);
+      });
   },
   reset(req, res, next) {
     factQueries.resetTheCount((err, count) => {
