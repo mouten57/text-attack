@@ -1,7 +1,7 @@
 module.exports = {
-  Twilio1: { number: '+17043248082' },
-  Twilio2: { number: '+17043273254' },
-  Twilio3: { number: '+17043273171' },
+  Twilio1: { number: '+17043273254' },
+  Twilio2: { number: '+17043273171' },
+  Twilio3: { number: '+17043248082' },
   Matt: { number: '+17043431124', email: 'ckn0rr1ss@gmail.com' },
   Alex: { number: '+17045890190', email: 'awalker@solutionzinc.com' },
   Hansen: { number: '+16073395321' },
