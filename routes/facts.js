@@ -5,4 +5,5 @@ module.exports = (app) => {
   app.post('/api/send', factController.send);
   app.post('/api/reply', factController.reply);
   app.get('/api/reset', factController.reset);
+  app.post('/api/get_convo_history', factController.getConvoHistory);
 };

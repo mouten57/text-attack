@@ -13,6 +13,13 @@ module.exports = {
       res.send(count);
     });
   },
+  getConvoHistory(req, res, next) {
+    const { phone } = req.body;
+    factQueries.getConvoHistory(phone, (err, convoData) => {
+      if (err) throw err;
+      res.send(convoData);
+    });
+  },
   send(req, res, next) {
     const { phone, fact } = req.body;
     const global_message = {

@@ -8,10 +8,37 @@ import {
   Container,
   TextArea,
   Form,
+  Segment,
 } from 'semantic-ui-react';
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 import 'react-semantic-toasts/styles/react-semantic-alert.css';
 import phonebook from '../src/phonebook';
+
+const convertTimestamp = function (timestamp) {
+  var d = new Date(timestamp), // Convert the passed timestamp to milliseconds
+    yyyy = d.getFullYear(),
+    mm = ('0' + (d.getMonth() + 1)).slice(-2), // Months are zero based. Add leading 0.
+    dd = ('0' + d.getDate()).slice(-2), // Add leading 0.
+    hh = d.getHours(),
+    h = hh,
+    min = ('0' + d.getMinutes()).slice(-2), // Add leading 0.
+    ampm = 'AM',
+    time;
+
+  if (hh > 12) {
+    h = hh - 12;
+    ampm = 'PM';
+  } else if (hh === 12) {
+    h = 12;
+    ampm = 'PM';
+  } else if (hh === 0) {
+    h = 12;
+  }
+
+  // ie: 2013-02-18, 8:35 AM
+  time = mm + '/' + dd + '/' + yyyy + ', ' + h + ':' + min + ' ' + ampm;
+  return time;
+};
 
 //
 class App extends Component {
@@ -20,7 +47,11 @@ class App extends Component {
     item: 1,
     post: '',
     newFact: '',
-    contact: { name: 'Matt', phone: phonebook['Matt'].number },
+    contact: {
+      name: 'Matt',
+      phone: phonebook['Matt'].number,
+      convoHistory: [],
+    },
     customMessageBool: false,
     customMessageValue: '',
     customButtonColor: 'yellow',
@@ -31,7 +62,6 @@ class App extends Component {
       method: 'GET',
     });
     const all_facts = await response.json();
-    console.log(all_facts);
     let facts = await all_facts.facts.list;
     let currentCount = await all_facts.latestCount;
     let page = currentCount.page;
@@ -93,8 +123,8 @@ class App extends Component {
 
   setContact = (e) => {
     let name = e.currentTarget.textContent;
-    console.log(phonebook[e.currentTarget.textContent]);
     this.setState({ contact: { name, phone: phonebook[name].number } });
+    this.getConvoHistory(phonebook[name].number);
   };
 
   handleReset = async (e) => {
@@ -117,6 +147,32 @@ class App extends Component {
   handleCustomMessageInput = (e) => {
     let customMessageValue = e.target.value;
     this.setState({ customMessageValue });
+  };
+
+  getConvoHistory = async (phone_number = this.state.contact.phone) => {
+    const data = {
+      phone: phone_number,
+    };
+    const response = await fetch('/api/get_convo_history', {
+      method: 'POST',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const body = await response.json();
+    const body_sorted_by_dates = body.sort(function (a, b) {
+      var dateA = new Date(a.dateCreated),
+        dateB = new Date(b.dateCreated);
+      return dateA - dateB;
+    });
+    console.log(body);
+    const contact = {
+      ...this.state.contact,
+      convoHistory: body_sorted_by_dates,
+    };
+    this.setState({ contact });
   };
 
   render() {
@@ -180,7 +236,13 @@ class App extends Component {
                   Custom Message
                 </Button>
               </Grid.Column>
+              <Grid.Column width={3}>
+                <Button color="purple" fluid onClick={this.getConvoHistory}>
+                  Get Convo History
+                </Button>
+              </Grid.Column>
             </Grid.Row>
+
             {this.state.customMessageBool ? (
               <Grid.Row columns={1}>
                 <Grid.Column>
@@ -217,13 +279,35 @@ class App extends Component {
                 </p>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row centered>
-              <Grid.Column width={12}>
+            <Grid.Row>
+              <Grid.Column width={3}>
                 <form onSubmit={this.handleSend}>
                   <Button fluid type="submit" color={'green'}>
                     SEND!
                   </Button>
                 </form>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row centered>
+              <Grid.Column width={16}>
+                <Segment raised>
+                  <h4>Conversation history for: {this.state.contact.name}</h4>
+                  {this.state.contact.convoHistory
+                    ? this.state.contact.convoHistory.map((msg, i) => {
+                        return (
+                          <p key={i}>
+                            <i>
+                              {msg.to == this.state.contact.phone
+                                ? 'Matt Sent'
+                                : `${this.state.contact.name} Replied`}
+                            </i>{' '}
+                            <b>{msg.body || msg.Body}</b> at{' '}
+                            <i>{convertTimestamp(msg.dateCreated)}</i>
+                          </p>
+                        );
+                      })
+                    : ''}
+                </Segment>
               </Grid.Column>
             </Grid.Row>
           </Grid>
