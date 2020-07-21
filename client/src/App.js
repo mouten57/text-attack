@@ -211,21 +211,21 @@ class App extends Component {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column mobile={16} tablet={4} computer={4}>
+            <Grid.Column mobile={16} tablet={5} computer={5}>
               <Form onSubmit={this.handleSubmit} floated={"left"}>
                 <Button type="submit" floated={"left"} fluid>
                   New Fact
                 </Button>
               </Form>
             </Grid.Column>
-            <Grid.Column mobile={16} tablet={4} computer={4}>
+            <Grid.Column mobile={16} tablet={5} computer={5}>
               <Form onSubmit={this.handleReset}>
                 <Button type="submit" color={"blue"} fluid>
                   Reset
                 </Button>
               </Form>
             </Grid.Column>
-            <Grid.Column mobile={16} tablet={4} computer={4}>
+            <Grid.Column mobile={16} tablet={5} computer={5}>
               <Button
                 type="submit"
                 color={this.state.customButtonColor}
@@ -235,11 +235,11 @@ class App extends Component {
                 Custom Message
               </Button>
             </Grid.Column>
-            <Grid.Column mobile={16} tablet={4} computer={4}>
+            {/* <Grid.Column mobile={16} tablet={4} computer={4}>
               <Button color="purple" fluid onClick={this.getConvoHistory}>
                 Get Convo History
               </Button>
-            </Grid.Column>
+            </Grid.Column> */}
           </Grid.Row>
 
           {this.state.customMessageBool ? (
@@ -280,7 +280,8 @@ class App extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column mobile={16} tablet={4} computer={4}>
-              <form onSubmit={this.handleSend}>
+              {/* onSubmit={this.handleSend} */}
+              <form>
                 <Button fluid type="submit" color={"green"}>
                   SEND!
                 </Button>
